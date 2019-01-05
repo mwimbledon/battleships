@@ -226,6 +226,38 @@ function handlePlaceButton() {
 function init() {
     var placeShipButton = document.getElementById("btnPlaceShip");
     placeShipButton.addEventListener("click", handlePlaceButton);
+
+    var ship1 = document.getElementById("ship1");
+    ship1.addEventListener("click", function () {
+        document.getElementById("shipNumIn").value = 1;
+        ship1.setAttribute("src", "ship.png")
+    })
+
+    var ship2 = document.getElementById("ship2");
+    ship2.addEventListener("click", function () {
+        document.getElementById("shipNumIn").value = 2;
+        ship2.setAttribute("src", "ship.png")
+    })
+
+    var ship3 = document.getElementById("ship3");
+    ship3.addEventListener("click", function () {
+        document.getElementById("shipNumIn").value = 3;
+        ship3.setAttribute("src", "ship.png")
+    })
+
+    var horizontal = document.getElementById("btnHorizontal");
+    horizontal.addEventListener("click", function () {
+        document.getElementById("shipOrIn").value = 1;
+        document.getElementById("btnVertical").style.backgroundColor = "rgb(153,255,51)";
+        horizontal.style.backgroundColor = "rgb(120,230,60)";
+    })
+
+    var vertical = document.getElementById("btnVertical");
+    vertical.addEventListener("click", function () {
+        document.getElementById("shipOrIn").value = 2;
+        document.getElementById("btnHorizontal").style.backgroundColor = "rgb(153,255,51)";
+        vertical.style.backgroundColor = "rgb(120,230,60)";
+    })
 }
 
 window.onload = init();

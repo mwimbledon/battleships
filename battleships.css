@@ -46,6 +46,14 @@ form#formShip {
     top: 0px;
     Left: 0px;
 }
+input#shipNumIn {
+    width: 0px;
+    visibility: hidden;
+}
+input#shipOrIn {
+    width: 0px;
+    visibility: hidden;
+}
 form#formFire {
     bottom: 0px;
     right: 0px;
