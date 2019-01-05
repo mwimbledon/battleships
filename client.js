@@ -1,4 +1,4 @@
-var client = new WebSocket("ws://localhost:9000");
+var client = new WebSocket("ws://51.140.114.158:9000");
 console.log(client);
 
 var fireButton = document.getElementById("btnFire");
