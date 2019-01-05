@@ -20,7 +20,7 @@ var model = {
                 return true;
             } else if (index >= 0) {
                 ship.hits[index] = "hit";
-                view.displayHit(guess);
+                view.displayHit("e" + guess);
                 view.displayMessage("Hit!");
 
                 if (this.isSunk(ship)) {
@@ -30,7 +30,7 @@ var model = {
                 return true;
             }
         }
-        view.displayMiss(guess);
+        view.displayMiss("e" + guess);
         view.displayMessage("You Missed!");
         return false;
     },
@@ -50,6 +50,10 @@ var model = {
         locations = this.generateShip(shipOr, location);
         if (!this.collision(locations)) {
             this.ships[shipNum - 1].locations = locations;
+
+            for (var i = 0; i < locations.length; i++) {
+                view.displayHit("m" + locations[i]);
+            }
 
             console.log("Ship " + (shipNum));
             console.log(this.ships[shipNum - 1].locations);

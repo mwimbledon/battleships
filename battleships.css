@@ -1,12 +1,13 @@
 ﻿body {
     background-color: black;
 }
-div#board {
+div#myBoard, div#enemyBoard {
     position: relative;
-    width: 1024px;
-    height: 925px;
+    width: 512px;
+    height: 462px;
     margin: auto;
     background: url("board.jpg") no-repeat;
+    background-size: contain;
 }
 div#messageArea {
     position: absolute;
@@ -16,19 +17,21 @@ div#messageArea {
 }
 .hit {
     background: url("ship.png") no-repeat center center;
+    background-size: contain;
 }
 .miss {
     background: url("miss.png") no-repeat center center;
+    background-size: contain;
 }
 table {
     border-spacing: 0px;
     position: absolute;
-    left: 172px;
-    top: 98px;
+    left: 86px;
+    top: 50px;
 }
 td {
-    width: 94px;
-    height: 94px;
+    width: 46px;
+    height: 46px;
 }
 form {
     position: absolute;
