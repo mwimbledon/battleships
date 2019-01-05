@@ -46,12 +46,20 @@
                 <td id="66"></td>
             </tr>
         </table>
-
-        <form>
-            <input type="text" id="guessIn" placeholder="A0" />
-            <input type="button" id="btnFire" value="FIRE!" />
-        </form>
     </div>
+
+    <form id="formShip">
+        <p>Place Ships</p>
+        <input type="text" id="shipNumIn" placeholder="1" /><br/>
+        <input type="text" id="shipOrIn" placeholder="1" /><br />
+        <input type="text" id="shipPlaceIn" placeholder="A0" /><br />
+        <input type="button" id="btnPlaceShip" value="place" />
+    </form>
+
+    <form id="formFire">
+        <input type="text" id="guessIn" placeholder="A0" />
+        <input type="button" disabled id="btnFire" value="FIRE!" />
+    </form>
 
     <script src="battleships.js"></script>
 </body>

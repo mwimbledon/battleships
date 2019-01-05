@@ -32,10 +32,16 @@ td {
 }
 form {
     position: absolute;
-    bottom: 0px;
-    right: 0px;
     padding: 15px;
     background-color: rgb(51,204,51);
+}
+form#formShip {
+    top: 0px;
+    Left: 0px;
+}
+form#formFire {
+    bottom: 0px;
+    right: 0px;
 }
 form input {
     background-color: rgb(153,255,51);

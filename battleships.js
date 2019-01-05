@@ -44,32 +44,20 @@ var model = {
         return true;
     },
 
-    generateShipLocations: function () {
+    generateShipLocations: function (shipNum, shipOr, location) {
         var locations;
 
-        for (var i = 0; i < this.numShips; i++) {
-            do {
-                locations = this.generateShip();
-            } while (this.collision(locations));
-            this.ships[i].locations = locations;
-        }
-        console.log("Ships array: ");
-        console.log(this.ships);
+        locations = this.generateShip(shipOr, location);
+        this.ships[shipNum - 1].locations = locations;
+
+        console.log("Ship " + (shipNum));
+        console.log(this.ships[shipNum - 1].locations);
     },
 
-    generateShip: function () {
-        var direction = Math.floor(Math.random() * 2);
-        var row, col;
-
-        if (direction === 1) {
-            row = Math.floor(Math.random() * this.boardSize);
-            col = Math.floor(Math.random() * (this.boardSize
-                - this.shipLength + 1))
-        } else {
-            col = Math.floor(Math.random() * this.boardSize);
-            row = Math.floor(Math.random() * (this.boardSize
-                - this.shipLength + 1))
-        }
+    generateShip: function (shipOr, shipPlace) {
+        var direction = parseInt(shipOr);
+        var row = parseInt(shipPlace.charAt(0));
+        var col = parseInt(shipPlace.charAt(1));
 
         var newShipLocation = [];
         for (var i = 0; i < this.shipLength; i++) {
@@ -87,6 +75,7 @@ var model = {
             var ship = this.ships[i];
             for (var j = 0; j < locations.length; j++) {
                 if (ship.locations.indexOf(locations[j]) >= 0) {
+                    Alert("Invalid location: ship already placed here")
                     return true;
                 }
             }
@@ -114,10 +103,12 @@ var view = {
 };
 
 var controller = {
+    shipsPlaced: 0,
+    placedShips: [],
     guesses: 0,
 
     processGuess: function (guess) {
-        var location = parseGuess(guess);
+        var location = parseLocation(guess);
         if (location) {
             this.guesses++;
             var hit = model.fire(location);
@@ -126,29 +117,77 @@ var controller = {
                     this.guesses + " guesses!");
             }
         }
+    },
+
+    processShipPlacement: function (shipNum, shipOr, shipPlace) {
+        var location = parseLocation(shipPlace);
+        if (validateLocation(location, shipOr) && isPlaced(shipNum) && !model.collision(location)) {
+            model.generateShipLocations(shipNum, shipOr, location);
+            this.shipsPlaced++;
+            view.displayMessage("Ship placed");
+            this.placedShips.push(shipNum);
+            if (this.shipsPlaced === model.numShips) {
+                view.displayMessage("All ships placed");
+                document.getElementById("btnFire").disabled = false;
+                document.getElementById("btnPlaceShip").disabled = true;
+            }
+        }
     }
 }
 
-function parseGuess(guess) {
+function parseLocation(location) {
     var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
 
-    if (guess === null || guess.length !== 2) {
-        alert("Invalid guess. Must be a letter and a number.");
+    if (location === null || location.length !== 2) {
+        alert("Invalid location: Must be a letter and a number.");
     } else {
-        var firstChar = guess.charAt(0);
+        var firstChar = location.charAt(0);
         var row = alphabet.indexOf(firstChar);
-        var column = guess.charAt(1);
+        var column = location.charAt(1);
 
         if (isNaN(row) || isNaN(column)) {
-            alert("Invalid guess. Must be a letter and a number.");
+            alert("Invalid location: Must be a letter and a number.");
         } else if (row < 0 || row >= model.boardSize || column < 0 || 
             column >= model.boardSize) {
-            alert("Invalid guess. Must be located on the board")
+            alert("Invalid location: Must be located on the board")
         } else {
             return row + column;
         }
     }
     return null;
+}
+
+function validateLocation(location, shipOr) {
+    var row = location.charAt(0);
+    var col = location.charAt(1);
+
+    if (isNaN(shipOr) || shipOr < 1 || shipOr > 2) {
+        alert("Invalid orientation: must be a 1 (for horizontal) or a 2 (for vertical)");
+        return false;
+    } else if (shipOr === 1) {
+        if (row > model.boardSize || col > model.boardSize - model.shipLength + 1) {
+            alert("Invalid location: The whole of the ship must reside on the board");
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        if (col > model.boardSize || row > model.boardSize - model.shipLength + 1) {
+            alert("Invalid location: The whole of the ship must reside on the board");
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+function isPlaced(shipNum) {
+    if (controller.placedShips.indexOf(shipNum) >= 0) {
+        alert("Invalid ship number: ship already placed");
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function handleFireButton() {
@@ -158,13 +197,27 @@ function handleFireButton() {
     controller.processGuess(guess);
 
     guessInput.value = "";
-};
+}
+
+function handlePlaceButton() {
+    var shipNum = document.getElementById("shipNumIn").value;
+    var shipOr = document.getElementById("shipOrIn").value;
+    var shipPlaceInput = document.getElementById("shipPlaceIn")
+    var shipPlace = shipPlaceInput.value.toUpperCase();
+
+    controller.processShipPlacement(shipNum, shipOr, shipPlace);
+
+    document.getElementById("shipNumIn").value = "";
+    document.getElementById("shipOrIn").value = "";
+    shipPlaceInput.value = "";
+}
 
 function init() {
     var fireButton = document.getElementById("btnFire");
     fireButton.addEventListener("click", handleFireButton);
 
-    model.generateShipLocations();
+    var placeShipButton = document.getElementById("btnPlaceShip");
+    placeShipButton.addEventListener("click", handlePlaceButton);
 }
 
 window.onload = init();
