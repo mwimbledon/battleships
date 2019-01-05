@@ -224,9 +224,6 @@ function handlePlaceButton() {
 }
 
 function init() {
-    var fireButton = document.getElementById("btnFire");
-    fireButton.addEventListener("click", handleFireButton);
-
     var placeShipButton = document.getElementById("btnPlaceShip");
     placeShipButton.addEventListener("click", handlePlaceButton);
 }
