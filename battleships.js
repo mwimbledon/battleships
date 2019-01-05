@@ -16,23 +16,24 @@ var model = {
             var index = ship.locations.indexOf(guess);
 
             if (ship.hits[index] === "hit") {
-                view.displayMessage("You have already hit this location!");
-                return true;
+                view.displayMessage("Opponent already hit this location!");
+                return "already";
             } else if (index >= 0) {
                 ship.hits[index] = "hit";
-                view.displayHit("e" + guess);
-                view.displayMessage("Hit!");
+                view.displayHit("m" + guess);
+                view.displayMessage("Opponent hit your battleship!");
 
                 if (this.isSunk(ship)) {
-                    view.displayMessage("You sank my battleship!");
+                    view.displayMessage("Opponent sank your battleship!");
                     this.shipsSunk++;
+                    return "sunk"
                 }
-                return true;
+                return "hit";
             }
         }
-        view.displayMiss("e" + guess);
-        view.displayMessage("You Missed!");
-        return false;
+        view.displayMiss("m" + guess);
+        view.displayMessage("Opponent Missed!");
+        return "miss";
     },
 
     isSunk: function (ship) {
@@ -52,7 +53,7 @@ var model = {
             this.ships[shipNum - 1].locations = locations;
 
             for (var i = 0; i < locations.length; i++) {
-                view.displayHit("m" + locations[i]);
+                view.displayShip("m" + locations[i]);
             }
 
             console.log("Ship " + (shipNum));
@@ -100,6 +101,11 @@ var view = {
         messageArea.innerHTML = msg
     },
 
+    displayShip: function (location) {
+        var cell = document.getElementById(location);
+        cell.setAttribute("class", "ship");
+    },
+
     displayHit: function (location) {
         var cell = document.getElementById(location);
         cell.setAttribute("class", "hit");
@@ -116,16 +122,15 @@ var controller = {
     placedShips: [],
     guesses: 0,
 
-    processGuess: function (guess) {
-        var location = parseLocation(guess);
-        if (location) {
-            this.guesses++;
-            var hit = model.fire(location);
-            if (hit && model.shipsSunk === model.numShips) {
-                view.displayMessage("You sank all the battleships in " +
-                    this.guesses + " guesses!");
-            }
+    processGuess: function (location) {
+        this.guesses++;
+        var hit = model.fire(location);
+        if (hit == "sunk" && model.shipsSunk === model.numShips) {
+            view.displayMessage("You lose! Opponent sank all your battleships in " +
+                this.guesses + " guesses!");
+            return "win";
         }
+        return hit;
     },
 
     processShipPlacement: function (shipNum, shipOr, shipPlace) {
@@ -198,13 +203,11 @@ function isNotPlaced(shipNum) {
     }
 }
 
-function handleFireButton() {
-    var guessInput = document.getElementById("guessIn");
-    var guess = guessInput.value.toUpperCase();
+function handleFireButton(guessInput) {
 
-    controller.processGuess(guess);
+    var hit = controller.processGuess(guessInput);
+    return hit;
 
-    guessInput.value = "";
 }
 
 function handlePlaceButton() {

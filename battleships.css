@@ -15,8 +15,12 @@ div#messageArea {
     left: 0px;
     color: rgb(51,204,51);
 }
-.hit {
+.ship {
     background: url("ship.png") no-repeat center center;
+    background-size: contain;
+}
+.hit {
+    background: url("hit.png") no-repeat center center;
     background-size: contain;
 }
 .miss {
