@@ -48,10 +48,15 @@ var model = {
         var locations;
 
         locations = this.generateShip(shipOr, location);
-        this.ships[shipNum - 1].locations = locations;
+        if (!this.collision(locations)) {
+            this.ships[shipNum - 1].locations = locations;
 
-        console.log("Ship " + (shipNum));
-        console.log(this.ships[shipNum - 1].locations);
+            console.log("Ship " + (shipNum));
+            console.log(this.ships[shipNum - 1].locations);
+            return true;
+        } else {
+            return false;
+        } 
     },
 
     generateShip: function (shipOr, shipPlace) {
@@ -75,7 +80,7 @@ var model = {
             var ship = this.ships[i];
             for (var j = 0; j < locations.length; j++) {
                 if (ship.locations.indexOf(locations[j]) >= 0) {
-                    Alert("Invalid location: ship already placed here")
+                    alert("Invalid location: ship already placed here");
                     return true;
                 }
             }
@@ -121,8 +126,7 @@ var controller = {
 
     processShipPlacement: function (shipNum, shipOr, shipPlace) {
         var location = parseLocation(shipPlace);
-        if (validateLocation(location, shipOr) && isPlaced(shipNum) && !model.collision(location)) {
-            model.generateShipLocations(shipNum, shipOr, location);
+        if (location && validateLocation(location, shipOr) && isNotPlaced(shipNum) && model.generateShipLocations(shipNum, shipOr, location)) {
             this.shipsPlaced++;
             view.displayMessage("Ship placed");
             this.placedShips.push(shipNum);
@@ -164,15 +168,15 @@ function validateLocation(location, shipOr) {
     if (isNaN(shipOr) || shipOr < 1 || shipOr > 2) {
         alert("Invalid orientation: must be a 1 (for horizontal) or a 2 (for vertical)");
         return false;
-    } else if (shipOr === 1) {
-        if (row > model.boardSize || col > model.boardSize - model.shipLength + 1) {
+    } else if (shipOr == 1) {
+        if (row > model.boardSize || col > model.boardSize - model.shipLength) {
             alert("Invalid location: The whole of the ship must reside on the board");
             return false;
         } else {
             return true;
         }
     } else {
-        if (col > model.boardSize || row > model.boardSize - model.shipLength + 1) {
+        if (col > model.boardSize || row > model.boardSize - model.shipLength) {
             alert("Invalid location: The whole of the ship must reside on the board");
             return false;
         } else {
@@ -181,7 +185,7 @@ function validateLocation(location, shipOr) {
     }
 }
 
-function isPlaced(shipNum) {
+function isNotPlaced(shipNum) {
     if (controller.placedShips.indexOf(shipNum) >= 0) {
         alert("Invalid ship number: ship already placed");
         return false;
