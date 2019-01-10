@@ -14,6 +14,9 @@ client.onopen = function () {
         } else if (messageArray[0] == "response") {
             processResponse(messageArray[1], messageArray[2]);
             document.getElementById("btnFire").disabled = true;
+        } else if (messageArray[0] == "Closed") {
+            view.displayMessage("Opponent has quit!");
+            document.getElementById("btnFire").disabled = true;
         }
     }
 

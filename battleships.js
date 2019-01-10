@@ -137,12 +137,17 @@ var controller = {
         var location = parseLocation(shipPlace);
         if (location && validateLocation(location, shipOr) && isNotPlaced(shipNum) && model.generateShipLocations(shipNum, shipOr, location)) {
             this.shipsPlaced++;
+            document.getElementById("shipNumIn").value = "";
+            document.getElementById("shipOrIn").value = "";
+            document.getElementById("btnVertical").style.backgroundColor = "rgb(153,255,51)";
+            document.getElementById("btnHorizontal").style.backgroundColor = "rgb(153,255,51)";
             view.displayMessage("Ship placed");
             this.placedShips.push(shipNum);
             if (this.shipsPlaced === model.numShips) {
                 view.displayMessage("All ships placed");
                 document.getElementById("btnFire").disabled = false;
                 document.getElementById("btnPlaceShip").disabled = true;
+                document.getElementById("formShip").style.visibility = "hidden";
             }
         }
     }
@@ -218,30 +223,41 @@ function handlePlaceButton() {
 
     controller.processShipPlacement(shipNum, shipOr, shipPlace);
 
-    document.getElementById("shipNumIn").value = "";
-    document.getElementById("shipOrIn").value = "";
     shipPlaceInput.value = "";
 }
 
 function init() {
     var placeShipButton = document.getElementById("btnPlaceShip");
     placeShipButton.addEventListener("click", handlePlaceButton);
+    var shipNumIn = document.getElementById("shipNumIn");
 
     var ship1 = document.getElementById("ship1");
     ship1.addEventListener("click", function () {
-        document.getElementById("shipNumIn").value = 1;
+        if (shipNumIn.value != "") {
+            var string = "ship" + shipNumIn.value;
+            document.getElementById(string).setAttribute("src", "unplacedShip.png");
+        }
+        shipNumIn.value = 1;
         ship1.setAttribute("src", "ship.png")
     })
 
     var ship2 = document.getElementById("ship2");
     ship2.addEventListener("click", function () {
-        document.getElementById("shipNumIn").value = 2;
+        if (shipNumIn.value != "") {
+            var string = "ship" + shipNumIn.value;
+            document.getElementById(string).setAttribute("src", "unplacedShip.png");
+        }
+        shipNumIn.value = 2;
         ship2.setAttribute("src", "ship.png")
     })
 
     var ship3 = document.getElementById("ship3");
     ship3.addEventListener("click", function () {
-        document.getElementById("shipNumIn").value = 3;
+        if (shipNumIn.value != "") {
+            var string = "ship" + shipNumIn.value;
+            document.getElementById(string).setAttribute("src", "unplacedShip.png");
+        }
+        shipNumIn.value = 3;
         ship3.setAttribute("src", "ship.png")
     })
 

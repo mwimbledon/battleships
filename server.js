@@ -24,6 +24,9 @@ socket.on("request", function (request) {
     connection.on("close", function (reasonCode, description) {
         console.log("Connection " + id + " closed");
         delete connections[id]
+        for (var con in connections) {
+            connections[con].sendUTF("Closed");
+        }
     });
 
     connections[id] = connection;
